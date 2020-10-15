@@ -22,6 +22,10 @@ def test_unknown_model_name():
         ('MKAT-AA-L-JIM-2020', 'VV', 0, 1, 1420, 0.2062726),
         ('MKAT-AA-UHF-JIM-2020', 'I', 1, 0, 800, 0.4077328),
         ('MKAT-AA-L-JIM-2020', 'I', 1, 0, 1420, 0.02575332),
+        # Check centre and half-power point
+        ('MKAT-AA-L-JIM-2020', 'VV', -0.02 / 60, 1.14 / 60, 1500, 1.0),
+        ('MKAT-AA-L-JIM-2020', 'VV', -0.02 / 60, (1.14 + 0.5 * 59.31) / 60,
+         1500, np.sqrt(0.5)),
     ]
 )
 def test_sample_beam_values(name, pol, x, y, freqMHz, value):
@@ -42,13 +46,15 @@ def showbeam(beam, freqMHz=1000, pol='HH', beamextent=10.):
     return fig
 
 
-@pytest.mark.mpl_image_compare(remove_text=True, filename='UHF_800_HH_10.png')
+@pytest.mark.mpl_image_compare(remove_text=True,
+                               filename='MKAT-AA-UHF-JIM-2020_800_HH_10.png')
 def test_UHF_beam_image():
     beam = JimBeam('MKAT-AA-UHF-JIM-2020')
     return showbeam(beam, 800, 'HH', 10.)
 
 
-@pytest.mark.mpl_image_compare(remove_text=True, filename='L_1420_VV_5.png')
+@pytest.mark.mpl_image_compare(remove_text=True,
+                               filename='MKAT-AA-L-JIM-2020_1420_VV_5.png')
 def test_L_beam_image():
     beam = JimBeam('MKAT-AA-L-JIM-2020')
     return showbeam(beam, 1420, 'VV', 5.)
